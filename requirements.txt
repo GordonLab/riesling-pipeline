@@ -1,0 +1,13 @@
+Cython>=0.22
+gffutils>=0.8.3
+MACS2>=2.1.0.20140616
+MACS==1.4.3
+matplotlib>=1.4.3
+metaseq>=0.5.5.4
+numexpr>=2.4
+numpy>=1.9.2
+pandas>=0.16.0
+PyYaml>=3.11
+pybedtools>=0.6.9
+seaborn==0.5.1
+tables>=3.1.1
