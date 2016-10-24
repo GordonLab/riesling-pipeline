@@ -1,0 +1,9 @@
+See info at:
+https://sites.google.com/site/anshulkundaje/projects/blacklists
+
+HUMAN (hg19/GRCh37): http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz
+Official track at UCSC http://genome.ucsc.edu/cgi-bin/hgFileUi?db=hg19&g=wgEncodeMapability
+README on how this track of generated: http://www.broadinstitute.org/~anshul/projects/encode/rawdata/blacklists/hg19-blacklist-README.pdf
+MOUSE (mm9): http://www.broadinstitute.org/~anshul/projects/mouse/blacklist/mm9-blacklist.bed.gz
+WORM (ce10): http://www.broadinstitute.org/~anshul/projects/worm/blacklist/ce10-blacklist.bed.gz
+FLY (dm3): http://www.broadinstitute.org/~anshul/projects/fly/blacklist/dm3-blacklist.bed.gz
