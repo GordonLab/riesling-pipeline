@@ -1,6 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+# RIESLING: Rapid Identification of Enhancers Linked to Nearby Genes
+#
+# This is a pipeline to rapidly identify super-enhancers, stretch enhancers, or other
+# interesting properties of enhancers based on ATAC-seq data. This is likely applicable to
+# other similar data types (DNAse-seq, etc.).
+#
+# Inputs:
+#   - .bam of aligned sequencing data
+#   - .bed of peaks from a peak caller
+#
+# Outputs:
+#   - Enhancer regions and their linked genes
+#
+#  NOTE: This implementation uses the top 10% of ATAC-seq signal to define enhancers.
+#  You can customize this below, in the call_enhancers() function.
+#
+#    An alternative R script is also provided for using a tangent cutoff.
+#
+#
 # Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
 #   https://nick.semenkovich.com/
 #
@@ -12,18 +31,6 @@
 #
 # Source: https://github.com/GordonLab/riesling-pipeline
 
-# Input:
-#  - original BAM
-#  - peaks from peak caller (.bed)
-#  - bamliquidator output?
-#
-# Output:
-#  - genes
-#  - enh clusters
-#  - stretch regions?
-#  - evolutionary conservation at loci?
-#  - some magic HTML output?
-#  - filter really highly expressed / other identified stuff?
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -56,8 +63,6 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-#from scipy.optimize import curve_fit
-#import seaborn as sns
 
 # TODO: Remove for prod
 import IPython
@@ -533,7 +538,7 @@ def call_enhancers(bamliquidator_data, output_path, name_prefix):
     # 2.575 = 99% w/i CI -> 1% outside -> top 0.5% (!)
     super_enhancer_cutoff = mean + (1.281 * stddev)
 
-    super_log.warn('Curve fitting not working! Using SD bounds.')
+    super_log.warn('Using SD bounds for super-enhancer determination. NOT TANGENT.')
     super_log.info('  Choosing enhancer cutoff of: %.2f' % (super_enhancer_cutoff))
 
 
@@ -627,6 +632,8 @@ def call_enhancers_with_control(bamliquidator_data, output_path, name_prefix):
     """
     super_log = _logshim.getLogger('call_enhancers_with_control')
     super_log.info('** Predicting enhancers with control...')
+
+    super_log.warn('This code is experimental. We prefer DESeq2 in our comparative analyses.')
 
     raw_width_normalized_counts = [item['width_normalized_count'] for item in bamliquidator_data.values()]
     assert(min(raw_width_normalized_counts) >= 0)  # Simple sanity checking.
