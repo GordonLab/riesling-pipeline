@@ -13,12 +13,11 @@ Since this was originally developed in 2014-2015, a number of other packages hav
 2. `cd riesling-pipeline`
 3. Install the Python dependencies: `pip install --user -U -r requirements.txt`
 
-=================
-/*
+<!---
 # A Working Example
 
 ** (Coming soon) **
-*/
+--->
 
 ## Expected Inputs & Pre-processing Data
 
@@ -30,7 +29,7 @@ The heart of RIESLING and related code expects:
 There are lots of ways to pre-process data -- please use whatever approach you prefer. A basic set of standalone
 scripts to help pre-process paired-end sequencing data is provided, detailed below under 'Pre-processing Tools'.
 
-/*
+<!---
 ## Calling Super-Enhancers, Stretch Enhancers, and more
 
 ** (Full example coming soon) **
@@ -39,6 +38,7 @@ scripts to help pre-process paired-end sequencing data is provided, detailed bel
 
 ** (Full example coming soon) **
 */
+-->
 
 ## Pre-processing Tools
 
