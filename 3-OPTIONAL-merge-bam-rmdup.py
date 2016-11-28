@@ -1,26 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
-#   https://nick.semenkovich.com/
-#
-# Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
-#   http://gordonlab.wustl.edu/
-#
-# This software is released under the MIT License:
-#  http://opensource.org/licenses/MIT
-#
-# Source: https://github.com/semenko/riesling-enhancer-prediction
-#
-
 # In case you've sequenced the same sample multiple times, use this script to
 # merge those samples together and then rmdup the pooled data.
 
 # WARNING: This assumes you've used the pipeline up to this point, and have pre-sorted & fixmated .bams.
-# Why use this script, when you could merge & rmdup by hand (or merge pre stage 2?)
-# 1. This just works (so you won't forget anything)
-# 2. Automatic sane file naming
-# 3. ???
+# Why use this script, when you could merge & rmdup by hand?
+# * This just works (so you won't forget anything)
+# * Automatic sane file naming
+#
+#
+# Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
+#   https://nick.semenkovich.com/
+#
+# Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
+#   https://gordonlab.wustl.edu/
+#
+# This software is released under the MIT License:
+#  http://opensource.org/licenses/MIT
+#
+# Source: https://github.com/GordonLab/riesling-pipeline
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -88,9 +87,9 @@ def merge_and_rmdup(input_files, output_path, disable_parallel=False):
 def main():
     # Parse & interpret command line flags.
     parser = argparse.ArgumentParser(description='Pool multiple .bams together for the same sample.'
-                                                 'Note: This is *only* necessary if you sequenced the same sample different times.',
+                                                 'Note: This is *only* necessary if you sequenced the same sample multiple times.',
                                      epilog="Written by Nick Semenkovich <semenko@alum.mit.edu> for the Gordon Lab at "
-                                            "Washington University in St. Louis: http://gordonlab.wustl.edu.",
+                                            "Washington University in St. Louis: https://gordonlab.wustl.edu.",
                                      usage='%(prog)s [options]',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 

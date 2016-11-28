@@ -1,29 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
+# Do very simple cleaning of .bam files for ATAC-seq data pre-processing.
+#
+# This script:
+# * Drops low mapping quality reads (<10)
+# * Removes chrM mitochondrial reads
+# * Removes PCR duplicates (using samtools)
+# * Removes blacklisted regions (from ENCODE or custom blacklists)
+#
+#
+# Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
 #   https://nick.semenkovich.com/
 #
 # Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
-#   http://gordonlab.wustl.edu/
+#   https://gordonlab.wustl.edu/
 #
 # This software is released under the MIT License:
 #  http://opensource.org/licenses/MIT
 #
-# Source: https://github.com/semenko/riesling-enhancer-prediction
-#
-# I gave good consideration to using a pipeline package (ruffus, etc.), but they
-# seemed bloated or limited in their usefulness.
-
-
-# Drop crappy very low (<@@@@@) from bowtie2
-#   Remove ChrM reads >
-#       Fix matepairs (samtools) >
-#           Sort >
-#               Remove duplicates >
-#                   Remove blacklisted regions >
-#                       Index >
-#                           Generate Stats (% ChrM, etc.)
+# Source: https://github.com/GordonLab/riesling-pipeline
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -143,9 +139,6 @@ def main():
     parser.add_argument('--no-parallel', '-np', dest="no_parallel", default=False, action='store_true',
                         help='Disable parallel job spawning.')
 
-    parser.add_argument('--skip-stats', dest="skip_stats", action='store_true',
-                        help='Skip statistics generation.', required=False)
-
     parser.add_argument("--verbose", "-v", dest="verbose", default=False, action='store_true')
 
     parser.add_argument("--no-log", "-nl", dest="nolog", default=False, action='store_true',
@@ -171,10 +164,6 @@ def main():
 
     large_filter_fixmate_and_sort(input_files, args.genome, output_path, disable_parallel=args.no_parallel)
     rmdup_and_blacklist(input_files, args.genome, output_path, disable_parallel=args.no_parallel)
-
-
-    if not args.skip_stats:
-        pass
 
 
 

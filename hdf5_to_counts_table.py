@@ -3,11 +3,15 @@
 #
 # This script exists to convert .hdf5 files into counts tables readable by R.
 #
+# It is useful for performing differential accessibility analyses (e.g. with
+# DESeq2) on hdf5 counts data from RIESLING, ROSE, or bamliquidator.
+#
+#
 # Unfortunately, we can't use the rhdf5 package, since it doesn't support the
 # datatypes used by our .hdf5 files.
 #
 #
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
+# Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
 #   https://nick.semenkovich.com/
 #
 # Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
@@ -16,7 +20,7 @@
 # This software is released under the MIT License:
 #  http://opensource.org/licenses/MIT
 #
-# Source: https://github.com/semenko/riesling-enhancer-prediction
+# Source: https://github.com/GordonLab/riesling-pipeline
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 

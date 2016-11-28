@@ -1,51 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
+# Automate the execution of peak calling on .bam files.
+# Originally designed for ATAC-seq data, but will work with any directory of .bam files.
+#
+# By default, this runs both macs14 and macs2 for comparison.
+#
+#
+# Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
 #   https://nick.semenkovich.com/
 #
 # Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
-#   http://gordonlab.wustl.edu/
+#   https://gordonlab.wustl.edu/
 #
 # This software is released under the MIT License:
 #  http://opensource.org/licenses/MIT
 #
-# Source: https://github.com/semenko/@@@@@@@@@@@@
-
-# Compare multiple peak-calling strategies
-
-# * PeakSeq
-# * F-seq?
-# * Hotspot??
-# * GEM???
-
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
-#   https://nick.semenkovich.com/
-#
-# Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
-#   http://gordonlab.wustl.edu/
-#
-# This software is released under the MIT License:
-#  http://opensource.org/licenses/MIT
-#
-# Source: https://github.com/semenko/riesling-enhancer-prediction
-#
-# I gave good consideration to using a pipeline package (ruffus, etc.), but they
-# seemed bloated or limited in their usefulness.
-
-
-# Drop crappy very low (<@@@@@) from bowtie2
-#   Remove ChrM reads >
-#       Fix matepairs (samtools) >
-#           Sort >
-#               Remove duplicates >
-#                   Remove blacklisted regions >
-#                       Index >
-#                           Generate Stats (% ChrM, etc.)
+# Source: https://github.com/GordonLab/riesling-pipeline
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -119,7 +90,7 @@ def run_macs14(input_files, output_path, genome, disable_parallel=False):
 
         shell_job_runner.run(command % (output_path,  # for cd hack
                                         'macs14',  # This must be pre-installed by the user. It's a big, complex package.
-                                        os.getcwd() + '/' + filename,  # input file # TODO: Fix this path hack. MACS14 sucks and cannot specify an output path :/
+                                        os.getcwd() + '/' + filename,  # input file # TODO: Fix this path hack. MACS14 cannot specify an output path :/
                                         os.path.basename(filename_without_extension),
                                         genome,  # for genome size
                                         os.path.basename(filename_without_extension) + '.macs14.log'))
@@ -153,11 +124,11 @@ def run_macs2(input_files, output_path, genome, disable_parallel=False):
 
         filename_without_extension = os.path.splitext(filename)[0] + '.macs2'
 
-        shell_job_runner.run(command % ('srun ~/.local/bin/macs2',  # This must be pre-installed by the user. It's a big, complex package.
+        shell_job_runner.run(command % ('macs2',  # This must be pre-installed by the user. It's a big, complex package.
                                         filename,  # input file
                                         os.path.basename(filename_without_extension),
                                         output_path,
-                                        genome,  # for genome size, not sure this actually matters with nolambda/nomodel
+                                        genome,  # for genome size, uncleaer if this actually matters with nolambda/nomodel
                                         output_path + "/" + os.path.basename(filename_without_extension) + '.log'))
 
     shell_job_runner.finish()
@@ -165,47 +136,12 @@ def run_macs2(input_files, output_path, genome, disable_parallel=False):
     macs2_log.info('MACS2 peak calling complete.')
 
 
-def run_homer(input_files, output_path, genome, disable_parallel=False):
-    homer_log = _logshim.getLogger('run_homer')
-
-    homer_log.info('Spawning Homer/findPeaks jobs...')
-
-    raise NotImplementedError
-
-    if disable_parallel:
-        shell_job_runner = _script_helpers.ShellJobRunner(homer_log)
-    else:
-        shell_job_runner = _script_helpers.ShellJobRunner(homer_log, delay_seconds=20)
-
-    for filename in input_files:
-        homer_log.debug('Working on: %s' % (filename))
-
-        # These are very sketchy, first-pass Homer settings.
-        #
-        command = ""
-
-        filename_without_extension = os.path.splitext(filename)[0]
-
-        shell_job_runner.run(command % (CONFIG['binaries']['findPeaks'],
-                                        filename,  # input file
-                                        filename_without_extension,
-                                        output_path,
-                                        genome,  # for genome size, not sure this actually matters with nolambda/nomodel
-                                        output_path + "/" + filename_without_extension + '.log'))
-
-    shell_job_runner.finish()
-
-    homer_log.info('MACS2 peak calling complete.')
-
-# findPeaks -i INPUT -o OUTPUT-FILE -size ??? -gsize SIZE -fragLength
-
-
 def main():
     # Parse & interpret command line flags.
-    parser = argparse.ArgumentParser(description='Run a number of standard peak calling algorithms for ATACseq data. '
+    parser = argparse.ArgumentParser(description='Run a number of standard peak calling algorithms for ATAC-seq data. '
                                                  'Expects de-duplicated, sorted, merged, ChrM-removed data.',
                                      epilog="Written by Nick Semenkovich <semenko@alum.mit.edu> for the Gordon Lab at "
-                                            "Washington University in St. Louis: http://gordonlab.wustl.edu.",
+                                            "Washington University in St. Louis: https://gordonlab.wustl.edu.",
                                      usage='%(prog)s [options]',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -225,8 +161,6 @@ def main():
                         help='Skip MACS v1.4 peak calling.', required=False)
     parser.add_argument('--skip-macs2', dest="skip_macs2", action='store_true',
                         help='Skip MACS v2 peak calling.', required=False)
-    parser.add_argument('--skip-homer', dest="skip_homer", action='store_true',
-                        help='Skip Homer (findPeaks) peak calling.', required=False)
 
 
     parser.add_argument("--verbose", "-v", dest="verbose", default=False, action='store_true')
@@ -259,10 +193,6 @@ def main():
         # macs2 callpeak --nomodel -t $BAM -n $OUT --nolambda --keep-dup all --slocal 10000
         run_macs2(input_files, output_path, args.genome, disable_parallel=args.no_parallel)
 
-    if not args.skip_homer and False:
-        # NOT IMPLEMENTED (!)
-        # Now the homer2 package
-        run_homer(input_files, output_path, args.genome, disable_parallel=args.no_parallel)
 
 
 

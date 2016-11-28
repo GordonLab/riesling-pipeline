@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
+# A simple
+#
+#
+# Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
 #   https://nick.semenkovich.com/
 #
 # Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
@@ -10,7 +13,7 @@
 # This software is released under the MIT License:
 #  http://opensource.org/licenses/MIT
 #
-# Source: https://github.com/semenko/riesling-enhancer-prediction
+# Source: https://github.com/GordonLab/riesling-pipeline
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -100,26 +103,6 @@ def find_paired_ends(input_path, verbose=False):
 
     return merge_strategy
 
-
-def generate_input_stats(paired_end_mapping):
-    """
-    Quickly loop over the output files and grab the stats for a histogram.
-
-    :param merge_strategy:
-    :param output_path:
-    :return:
-    """
-    stats_log = _logshim.getLogger("generate_input_stats")
-    stats_log.info("Generating per-sample read stats...")
-
-    for merged_name, something_else in paired_end_mapping.iteritems():
-        runner = _script_helpers.IntelligentRunner("cat %s | wc -l" % (something_else[0]))
-        count = runner.run()
-        print("count is %s" % (count))
-        print(merged_name)
-        print(something_else)
-
-
 def run_bowtie2(paired_end_mapping, genome, output_path, disable_parallel=False):
     bowtie2_logger = _logshim.getLogger('run_bowtie2')
 
@@ -158,52 +141,11 @@ def run_bowtie2(paired_end_mapping, genome, output_path, disable_parallel=False)
     shell_job_runner.finish()
 
 
-
-def generate_bowtie2_stats(mapping, output_path):
-    """
-    Generate very basic stats on the input, including:
-    * # of paired-end input reads
-    * % unmapped reads
-
-    * Per-chromosome histogram per-file
-    * Mitochondrial read % stats
-
-    :return:
-    """
-    stats_log = _logshim.getLogger('generate_bowtie2_stats')
-
-    output_file = output_path + '/' + '00-summarized-mapping-stats.txt'
-    stats_log.info('Writing summary read statistics to: %s' % (output_file))
-
-
-    with open(output_file, 'w') as statfh:
-        for prefix in mapping.iterkeys():
-            filename = output_path + "/" + prefix + ".bt2.sam"
-            stats_log.info(filename)
-
-            fh = pysam.Samfile("asd.bam")
-            fh.header
-
-        print("omg", file=statfh)
-
-    # Honestly, you can extract just the length much more aggressively with cut -f9
-    #with pysam.Samfile(input_bamsam, 'rb') as infile:
-    #    for alignedread in infile.fetch(str('chr1'), 4000000, 5000000):
-    #        print(alignedread)
-
-    return True
-
-    # Honestly, you can extract just the length much more aggressively with cut -f9
-#    with pysam.Samfile(input_bamsam, 'rb') as infile:
-#        for alignedread in infile.fetch(str('chr1'), 4000000, 5000000):
-#            print(alignedread)
-
 def main():
     # Parse & interpret command line flags.
-    parser = argparse.ArgumentParser(description='Given paired-end .fastq/.fastq.gz files, map to a genome and '
-                                                 'generate basic statistics on the input files.',
+    parser = argparse.ArgumentParser(description='Given paired-end .fastq/.fastq.gz files, map to a genome.',
                                      epilog="Written by Nick Semenkovich <semenko@alum.mit.edu> for the Gordon Lab at "
-                                            "Washington University in St. Louis: http://gordonlab.wustl.edu.",
+                                            "Washington University in St. Louis: https://gordonlab.wustl.edu.",
                                      usage='%(prog)s [options]',
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
@@ -216,8 +158,6 @@ def main():
     parser.add_argument('--no-parallel', '-np', dest="no_parallel", default=False, action='store_true',
                         help='Disable parallel job spawning.')
 
-    parser.add_argument('--skip-stats', dest="skip_stats", action='store_true',
-                        help='Skip statistics generation.', required=False)
 
     parser.add_argument("--verbose", "-v", dest="verbose", default=False, action='store_true')
 
@@ -233,13 +173,7 @@ def main():
 
     paired_end_mapping = find_paired_ends(args.input_path, verbose=args.verbose)
 
-    if not args.skip_stats:
-        generate_input_stats(paired_end_mapping)
-
     run_bowtie2(paired_end_mapping, args.genome, output_path)
-
-    if not args.skip_stats:
-        generate_bowtie2_stats(paired_end_mapping, output_path)
 
 
 if __name__ == '__main__':

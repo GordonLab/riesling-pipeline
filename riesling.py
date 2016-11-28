@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
+# Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
 #   https://nick.semenkovich.com/
 #
 # Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
@@ -10,7 +10,7 @@
 # This software is released under the MIT License:
 #   http://opensource.org/licenses/MIT
 #
-# Source: https://github.com/semenko/riesling-enhancer-prediction
+# Source: https://github.com/GordonLab/riesling-pipeline
 
 # Input:
 #  - original BAM

@@ -1,7 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2014 Nick Semenkovich <semenko@alum.mit.edu>.
+# This script merges one sample across lanes.
+#
+# This script will *only* be useful if you have the same multiplexed sample loaded into multiple lanes of a flowcell.
+#
+# This concatenates the same index's pared-end files (L*_R*_* .fastq.gz) across multiple
+# lanes into one set of PE files per-sample.
+#
+#
+# Copyright (c) 2014-2016 Nick Semenkovich <semenko@alum.mit.edu>.
 #   https://nick.semenkovich.com/
 #
 # Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
@@ -10,7 +18,7 @@
 # This software is released under the MIT License:
 #  http://opensource.org/licenses/MIT
 #
-# Source: https://github.com/semenko/riesling-enhancer-prediction
+# Source: https://github.com/GordonLab/riesling-pipeline
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
