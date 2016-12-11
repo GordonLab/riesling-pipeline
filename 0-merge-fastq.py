@@ -13,7 +13,7 @@
 #   https://nick.semenkovich.com/
 #
 # Developed for the Gordon Lab, Washington University in St. Louis (WUSTL)
-#   http://gordonlab.wustl.edu/
+#   https://gordonlab.wustl.edu/
 #
 # This software is released under the MIT License:
 #  http://opensource.org/licenses/MIT
