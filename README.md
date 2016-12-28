@@ -13,6 +13,27 @@ Since this was originally developed in 2014-2015, a number of other packages hav
 2. `cd riesling-pipeline`
 3. Install the Python dependencies: `pip install --user -U -r requirements.txt`
 
+================
+
+### Simple Hacks: Call super-enhancers on a .bed
+
+If you already have a .bed of putative enhancers, you can rapidly derive the super-enhancer population using `get-SuperEnhancers.R`.
+
+The `get-SuperEnhancers.R` script will determine the enhancer tangent line and generate statistics. It will *not* filter blacklisted regions, stitch large regions together, remove TSSes, etc. -- use the full pipeline (detailed below) for that.
+
+Quick example:
+
+1. Grab a .bed file, e.g. the hg19 Astrocytes from DBSuper: `wget http://bioinfo.au.tsinghua.edu.cn/dbsuper/data/bed/hg19/Astrocytes.bed`
+2. Call the super-enhancers: `Rscript get-SuperEnhancers.R Astrocytes.bed`
+
+<!---
+The output will look like:
+
+
+Again, this may not be appropriate on non-preprocessed (blacklisted, TSS-filtered, etc.) data. You more likely want to use the full pipeline, detailed below.
+--->
+
+
 <!---
 # A Working Example
 
@@ -62,3 +83,5 @@ This includes: chrM removal, quality filtering, ENCODE blacklist removal, and PC
 * ./4-call-peaks.py: Run both macs14 and macs2 on .bam files.
 
 By default, this runs both macs14 and macs2, and operates on directories of .bam files.
+
+================
