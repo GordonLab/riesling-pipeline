@@ -1,0 +1,11 @@
+Statistics for: demo-data/sample-mm10-CD4.bed
+SE Signal %: 38
+TE Signal %: 62
+SE Count: 1329
+TE Count: 24794
+SE Count %: 5.09
+TE Count %: 94.91
+Mean SE Size: 35846.22
+Mean TE Size: 5104.87
+Median SE Size: 31833
+Median TE Size: 892.5
