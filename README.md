@@ -17,21 +17,30 @@ Since this was originally developed in 2014-2015, a number of other packages hav
 
 ### Simple Hacks: Call super-enhancers on a .bed
 
-If you already have a .bed of putative enhancers, you can rapidly derive the super-enhancer population using `get-SuperEnhancers.R`.
+If you already have a .bed of putative enhancers, you can rapidly derive the super-enhancer population and statistics using `get-SuperEnhancers.R`. It will *not* filter blacklisted regions, stitch large regions together, remove TSSes, etc. -- use the full pipeline (detailed below) for that.
 
-The `get-SuperEnhancers.R` script will determine the enhancer tangent line and generate statistics. It will *not* filter blacklisted regions, stitch large regions together, remove TSSes, etc. -- use the full pipeline (detailed below) for that.
+A quick example, usine the [demo-data/sample-mm10-CD4.bed](demo-data/sample-mm10-CD4.bed) file, which contains signal intensity in the 7th column:
 
-Quick example:
+```
+$ git clone https://github.com/GordonLab/riesling-pipeline/
+...
+$ cd riesling-pipeline/
+$ Rscript get-SuperEnhancers.R demo-data/sample-mm10-CD4.bed demo-data/sample-get-SuperEnhancers-output/
 
-1. Grab a .bed file, e.g. the hg19 Astrocytes from DBSuper: `wget http://bioinfo.au.tsinghua.edu.cn/dbsuper/data/bed/hg19/Astrocytes.bed`
-2. Call the super-enhancers: `Rscript get-SuperEnhancers.R Astrocytes.bed`
+[1] "Working on: demo-data/sample-mm10-CD4.bed"
+[1] "Output dir: demo-data/sample-get-SuperEnhancers-output/"
+[1] "Current directory is: /Users/semenko/git/riesling-pipeline"
+[1] "Setting output directory to: demo-data/sample-get-SuperEnhancers-output/"
+[1] "Inflection at entry: 24795"
+[1] "Corresponding cutoff score: 8105.366159055"
+```
 
-<!---
-The output will look like:
+Your results are now in [demo-data/sample-get-SuperEnhancers-output/](demo-data/sample-get-SuperEnhancers-output/), and will look like:
+
 
 
 Again, this may not be appropriate on non-preprocessed (blacklisted, TSS-filtered, etc.) data. You more likely want to use the full pipeline, detailed below.
---->
+
 
 
 <!---
