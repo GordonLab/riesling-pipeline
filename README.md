@@ -17,21 +17,54 @@ Since this was originally developed in 2014-2015, a number of other packages hav
 
 ### Simple Hacks: Call super-enhancers on a .bed
 
-If you already have a .bed of putative enhancers, you can rapidly derive the super-enhancer population using `get-SuperEnhancers.R`.
+If you already have a .bed of putative enhancers, you can rapidly derive the super-enhancer population and statistics using `get-SuperEnhancers.R`. It will *not* filter blacklisted regions, stitch large regions together, remove TSSes, etc. -- use the full pipeline (detailed below) for that.
 
-The `get-SuperEnhancers.R` script will determine the enhancer tangent line and generate statistics. It will *not* filter blacklisted regions, stitch large regions together, remove TSSes, etc. -- use the full pipeline (detailed below) for that.
+A quick example, using the [demo-data/sample-mm10-CD4.bed](demo-data/sample-mm10-CD4.bed) file, which contains signal intensity in the 7th column:
 
-Quick example:
+```
+$ git clone https://github.com/GordonLab/riesling-pipeline/
+...
+$ cd riesling-pipeline/
+$ Rscript get-SuperEnhancers.R demo-data/sample-mm10-CD4.bed demo-data/sample-get-SuperEnhancers-output/
 
-1. Grab a .bed file, e.g. the hg19 Astrocytes from DBSuper: `wget http://bioinfo.au.tsinghua.edu.cn/dbsuper/data/bed/hg19/Astrocytes.bed`
-2. Call the super-enhancers: `Rscript get-SuperEnhancers.R Astrocytes.bed`
+[1] "Working on: demo-data/sample-mm10-CD4.bed"
+[1] "Output dir: demo-data/sample-get-SuperEnhancers-output/"
+[1] "Current directory is: /Users/semenko/git/riesling-pipeline"
+[1] "Setting output directory to: demo-data/sample-get-SuperEnhancers-output/"
+[1] "Inflection at entry: 24795"
+[1] "Corresponding cutoff score: 8105.366159055"
 
-<!---
-The output will look like:
+$ cat demo-data/sample-get-SuperEnhancers-output/0-enhancer-stats.txt
+ Statistics for: demo-data/sample-mm10-CD4.bed
+ SE Signal %: 38
+ TE Signal %: 62
+ SE Count: 1329
+ TE Count: 24794
+ SE Count %: 5.09
+ TE Count %: 94.91
+ Mean SE Size: 35846.22
+ Mean TE Size: 5104.87
+ Median SE Size: 31833
+ Median TE Size: 892.5
+```
 
+Graphical & .bed results are now in [demo-data/sample-get-SuperEnhancers-output/](demo-data/sample-get-SuperEnhancers-output/), and will include these figures and more:
+
+<table>
+<tr>
+<td>Super-enhancer Cutoff Hockeystick</td>
+<td>Super-enhancer Size Distribution</td>
+<td>Super vs Traditional vs Stretch Enhancers</td>
+</tr>
+<tr>
+<td><img src="demo-data/sample-get-SuperEnhancers-output/se-cutoff.R.png?raw=true" height="300px"></td>
+<td><img src="demo-data/sample-get-SuperEnhancers-output/se-size-histogram.R.png?raw=true" height="300px"></td>
+<td><img src="demo-data/sample-get-SuperEnhancers-output/se-te-stretch-vs-nonstretch-count-pie.R.png?raw=true" height="300px"></td>
+</tr>
+</table>
 
 Again, this may not be appropriate on non-preprocessed (blacklisted, TSS-filtered, etc.) data. You more likely want to use the full pipeline, detailed below.
---->
+
 
 
 <!---
