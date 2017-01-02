@@ -67,20 +67,12 @@ There are lots of valid way to pre-process data. These standalone scripts may be
 to the peak calling settings you use -- as the defaults may not be applicable to your experimental approach.
 
 
-* (Optional) ./0-merge-fastq.py: Intelligently merge across lanes, for multiple-lane samples (e.g. one multiplexed sample loaded into multiple lanes).
-This will only be useful if you've loaded the *same, multiplexed sample* into multiple lanes of an Illumina flowcell.
-
-This script concatenates the same index's pared-end files (L*_R*_* .fastq.gz) across multiple lanes into one set of PE files per-sample.
-
-
 * ./1-map-to-genome.py: Run bowtie2 across a folder of paired-end sequence data.
 
 * ./2-sanitize-bam.py: Clean up .bam files, including ATAC-specific fixes.
 This includes: chrM removal, quality filtering, ENCODE blacklist removal, and PCR duplicate removal
 
-* (Optional) ./3-OPTIONAL-merge-bam-rmdup.py: A helper script to blindly concatenate and deduplicate multiple sets of BAMs.
-
-* ./4-call-peaks.py: Run both macs14 and macs2 on .bam files.
+* ./3-call-peaks.py: Run both macs14 and macs2 on .bam files.
 
 By default, this runs both macs14 and macs2, and operates on directories of .bam files.
 
