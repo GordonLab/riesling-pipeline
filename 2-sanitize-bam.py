@@ -59,34 +59,22 @@ def large_filter_fixmate_and_sort(input_files, genome, output_path, disable_para
     #     We don't parallelize here (-@ #) because fixmate blocks & parallel seems to only help for compressed.
     #  - Fixmate (needed for rmdrup)
     #  - Resorted by position
-    tempfiles = []
     for filename in input_files:
         primary_logger.debug('Working on: %s' % (filename))
         command = 'export LANG=C; %s view -h -q 10 %s | grep -vF "chrM" | %s view -u -b - | ' \
-                  '%s sort -l 0 -n -m %s -T %s -O bam | %s fixmate -O bam - - | %s sort -@ 8 -m %s - %s'
-
-        # A super evil user could modify TMPDIR and make this generate evil strings. That's evil.
-        temporary_file = tempfile.mkstemp('.tmp.bam')
-        tempfiles.append(temporary_file)
+                  '%s sort -l 0 -n -m %s -O bam | %s fixmate -O bam - - | %s sort -@ 8 -m %s -o %s'
 
         shell_job_runner.run(command % (CONFIG['binaries']['samtools'],
                                         filename,
                                         CONFIG['binaries']['samtools'],
                                         CONFIG['binaries']['samtools'],
                                         MAX_MEM,
-                                        temporary_file[1],
                                         CONFIG['binaries']['samtools'],
                                         CONFIG['binaries']['samtools'],
                                         MAX_MEM,
                                         output_path + "/" + os.path.basename(os.path.splitext(filename)[0]) + output_suffix))
 
     shell_job_runner.finish()
-
-    # Clean up our temporary files.
-    primary_logger.info('Removing temporary files ...')
-    for fd, fname in tempfiles:
-        os.close(fd)
-        os.unlink(fname)
 
     primary_logger.info('First large stage complete! Saved as .tmp.bam for next stage.')
 
