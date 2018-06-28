@@ -1,0 +1,42 @@
+general:
+  custom_tmp_dir: /tmp/
+
+# Good source for standard builds & paths is the Illumina iGenomes collection:
+#   http://support.illumina.com/sequencing/sequencing_software/igenome.html
+bowtie2_genomes:
+  mm9: Mus_musculus/UCSC/mm9/Sequence/Bowtie2Index/genome
+  mm10: Mus_musculus/UCSC/mm10/Sequence/Bowtie2Index/genome
+  hg18: Mus_musculus/UCSC/hg18/Sequence/Bowtie2Index/genome
+  hg19: Mus_musculus/UCSC/hg19/Sequence/Bowtie2Index/genome
+
+# Binaries -- some distributed with this package
+# We include these to try to standardize on sane versions of software.
+binaries:
+  samtools: dist/samtools-1.2
+  samtools_legacy: dist/samtools-0.1.19
+  bedtools: dist/bedtools-2.23.0
+  findPeaks: dist/findPeaks-4.7  # via http://homer.salk.edu/homer/
+
+# Blacklisting paths
+# From the ENCODE blacklist of known overcalled/false-positive regions.
+blacklists:
+  mm9: blacklists/mm9-blacklist.bed
+  mm10: blacklists/mm10-blacklist-via-mm9.bed
+  hg19: blacklists/wgEncodeDacMapabilityConsensusExcludable.bed
+  ce10: blacklists/ce10-blacklist.bed
+  dm3: blacklists/dm3-blacklist.bed
+
+# RefSeq maps, for the RIESLING code, via UCSC
+refseq:
+  mm9: refseq/mm9.ucsc.RefSeq.refGene.tsv.gz
+  mm10: refseq/mm10.ucsc.RefSeq.refGene.tsv.gz
+  hg18: refseq/hg18.ucsc.RefSeq.refGene.tsv.gz
+  hg19: refseq/hg19.ucsc.RefSeq.refGene.tsv.gz
+  hg38: refseq/hg38.ucsc.RefSeq.refGene.tsv.gz
+
+# Gene info, for final annotation steps of RIESLING
+gffs:
+  mm9: /dev/null
+  mm10: genomes/mm10genes.transcript.gtf
+  hg18: /dev/null
+  hg19: /dev/null
